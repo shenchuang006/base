@@ -1,0 +1,329 @@
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+
+--密码有变动的情况下
+git config --system --unset credential.helper
+git config --global credential.helper store
+
+
+Create a new repository
+git clone http://gitlab.yunjiglobal.com/shenchuang/yunji-ims-stocktake.git
+cd yunji-ims-stocktake
+touch README.md
+git add README.md
+git commit -m "add README"
+git push -u origin master
+
+Existing folder
+cd existing_folder
+git init
+git remote add origin http://gitlab.yunjiglobal.com/shenchuang/yunji-ims-stocktake.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+
+Existing Git repository
+cd existing_repo
+git remote rename origin old-origin
+git remote add origin http://gitlab.yunjiglobal.com/shenchuang/yunji-ims-stocktake.git
+git push -u origin --all
+git push -u origin --tags
+
+
+
+
+1.git pull origin master把远程仓库的文件拉下来
+
+
+
+
+原因 
+git push时选取的本地分支进行推送，如果推送的分支在本地分支中不存在，就会产生报错src refspec dev does not match any
+
+解决 
+创建一个对应的dev branch：git checkout -b dev
+
+
+
+删除git remote
+2018年01月12日 11:14:04 luodao_ 阅读数：6860更多
+个人分类： git
+目前项目中有两个remote
+
+$ git remote -v
+origin  https://github.com/luodao236/test.git (fetch)
+origin  https://github.com/luodao236/test.git (push)
+test    https://github.com/luodao236/onceAgain.git (fetch)
+test    https://github.com/luodao236/onceAgain.git (push)
+
+现在想删除其中的一个test，方法为:
+git remote remove <name>
+$ git remote remove test
+结果为：
+$ git remote -v
+origin  https://github.com/luodao236/test.git (fetch)
+origin  https://github.com/luodao236/test.git (push)
+
+
+1.1 仅仅删除暂存区里的文件    
+    此时你想撤销错误添加到暂存区里的文件，可以输入以下命令：
+git rm --cache 文件名
+
+3.删除本地的文件或文件夹
+
+rm -rf xxxx
+
+
+
+
+
+
+
+
+
+Git dev分支合并到master分支完美实战
+2018年06月28日 21:58:55 FeelTouch 阅读数：3029更多
+个人分类： 技术思想/开发管理/工具使用
+版权声明：阅读优秀源码，宛若一场探索未知的旅行，疑惑处惊奇，优雅处旖旎; 一切都是新奇的，千回百转与大师的心灵触碰，一场跨越时空的对话，涤荡了原有的愚昧，蜕变出更好的自己。	https://blog.csdn.net/FENGQIYUNRAN/article/details/80849536
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (master)                                                               
+$ git branch -a  #先查看下当前的本地和远程分支
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/dev
+  remotes/origin/master
+
+
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (master)
+$ git checkout -b my_dev origin/dev  #或者是切换到本地的my_dev分支，假如已经存在的话，即git checkout my_dev 
+Switched to a new branch 'my_dev'
+Branch 'my_dev' set up to track remote branch 'dev' from 'origin'.
+
+
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (my_dev)
+$ git pull #将本地分支my_dev对应的远程分支dev拉下来
+remote: Counting objects: 33, done.
+remote: Compressing objects: 100% (20/20), done.
+remote: Total 33 (delta 11), reused 32 (delta 10)
+Unpacking objects: 100% (33/33), done.
+From 192.168.5.222:interlive/cloud/server-functions_services
+   9b3c7c5..dcdb51b  dev        -> origin/dev
+Updating 9b3c7c5..dcdb51b
+Fast-forward
+ content/pom.xml                                   |  24 +-
+ .../java/com/interlive/services/common/Constant.java  |   4 +
+ .../com/interlive/services/common/RedisClient.java    |   7 -
+ create mode 100644 content/src/test/java/com/interlive/services/controller/ControllerTest.java
+
+
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (my_dev)
+$ git checkout master #切换到master分支
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+
+
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (master)
+$ git pull #确保master分支也是最新的
+Already up to date.
+
+
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (master)
+$ git merge my_dev #执行合并的关键代码，此时执行结果时将本地的my_dev合并到本地master分支
+hint: Waiting for your editor to close the file... Auto-merging content/src/main/java/com/interlive/services/common/Constant.java
+Merge made by the 'recursive' strategy.
+ content/db/.sql                            | 34 +++++++++
+ .../java/com/interlive/services/common/Constant.java  |  4 +
+ 16 files changed, 490 insertions(+), 9 deletions(-)
+ create mode 100644 content/src/main/java/com/interlive/services/controller/Controller.java
+
+
+aa@aa-PC MINGW64 /f/online-center/cloud/server-functions_services (master)
+$ git push origin master #将合并的本地master分支推送到远程master
+Counting objects: 16, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (13/13), done.
+Writing objects: 100% (16/16), 1.48 KiB | 504.00 KiB/s, done.
+Total 16 (delta 9), reused 0 (delta 0)
+To 192.168.5.222:interlive/cloud/server-functions_services.git
+   d970c11..edaa065  master -> master
+   
+   
+   
+   
+   
+-- git 修改分支名称
+git 修改本地和远程分支名称
+2018年09月06日 09:33:24 每天进步一点_点 阅读数：437 标签： git 修改分支名称  更多
+个人分类： git
+版权声明：本文为博主原创文章，未经博主允许不得转载。	https://blog.csdn.net/zhangxiaoyang0/article/details/82454209
+git branch -a #查看所有分支 
+git branch -r #查看远程分支 
+git branch -vv #查看本地分支所关联的远程分支
+
+git branch -m old_branch new_branch # Rename branch locally 
+git push origin :old_branch # Delete the old branch 
+git push --set-upstream origin new_branch 或者git push -u origin new_branch# Push the new branch, set local branch to track the new remote
+
+注意：把origin改为自己的名称
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+git创建分支并推送到远程分支
+2018年02月27日 11:47:51 赖进杰 阅读数：13747
+现在我在master分支上，工作目标是干净的，也没有需要commit的：
+
+$ git branch
+* master
+  release
+ 
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working directory clean
+新建远程分支
+新建一个本地分支：
+
+$ git checkout -b dbg_lichen_star
+查看一下现在的分支状态:
+
+$ git branch
+* dbg_lichen_star
+  master
+  release
+星号(*)表示当前所在分支。现在的状态是成功创建的新的分支并且已经切换到新分支上。
+
+把新建的本地分支push到远程服务器，远程分支与本地分支同名（当然可以随意起名）：
+
+$ git push origin dbg_lichen_star:dbg_lichen_star
+使用git branch -a查看所有分支，会看到remotes/origin/dbg_lichen_star这个远程分支，说明新建远程分支成功。
+
+删除远程分支
+我比较喜欢的简单方式，推送一个空分支到远程分支，其实就相当于删除远程分支：
+
+$ git push origin :dbg_lichen_star
+也可以使用：
+
+$ git push origin --delete dbg_lichen_star
+这两种方式都可以删除指定的远程分支
+
+
+
+
+
+
+
+
+删除 stash 的内容 ,感觉整个世界都清净了::
+
+其实就这么几行命令:
+
+git stash list //查看stash 列表
+
+如果得到这结果说明你的stash 是没有东西的
+
+
+
+这代表有一个队列
+
+
+
+
+
+然后你就可以 执行 git stash clear  :注意这是清空你所有的内容
+
+$ git stash drop stash@{0}  这是删除第一个队列
+--------------------- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+玩转GIT之看清 git stash 的本质
+2018年04月12日 01:24:50 AndyNikolas 阅读数：337
+版权声明：本文为博主原创文章，未经博主允许不得转载。	https://blog.csdn.net/AndyNikolas/article/details/79906132
+开发经验
+1：当你新建文件修改了代码，如果没有git add 那么你用 git stash 是不能保存修改到暂存区的，但是如果你没有新建文件，只是在原有文件里进行修改，那么是可以在没有git add 的情况下保存到修改到暂存区的。
+
+2：不论做什么样的修改，当你git add 之后，你都可以使用git stash 进行保存，然后再用git stash apply 进行恢复。
+
+3：注意，git stash apply 是不能将stash list 里面的暂存列表清除的，必须再用git stash drop 或者一开始就用 
+git stash pop 恢复，这样在恢复的同时，就把stash list 里面的数据清除。
+
+下面是开发中最多的用法【没有之一】
+// 正撸A项目的时候,被拉去做B项目，这个时候 stash 就要上场了
+// 先把A项目的已经写好的代码 git add 一下
+git add .
+// 然后将A项目保存到暂存区
+git stash
+// 然后写B项目代码，写完并且commit完，准备回来开发A项目，再执行
+git stash apply
+// 这样就将之前开发A项目的代码从暂存区拿了出来，就可以继续A项目的开发了
+1
+2
+3
+4
+5
+6
+7
+8
+9
+下面是一些命令科普
+git stash
+
+保存当前的工作进度。会分别对暂存区和工作区的状态进行保存。
+
+git stash save “message…”
+
+这条命令实际上是第一条 git stash 命令的完整版。
+
+git stash list
+
+显示进度列表。此命令显然暗示了git stash 可以多次保存工作进度，并用在恢复时候进行选择。
+
+git stash pop
+
+如果不使用任何参数，会恢复最新保存的工作进度，并将恢复的工作进度从存储的工作进度列表中清除。
+
+git stash apply
+
+除了不删除恢复的进度之外，其余和 git stash pop 命令一样。
+
+git stash clear
+
+删除所有存储的进度。
+
+
+
+
+2、分支的删除
+
+上面可以看到，虽然 bugfix01 和 bugfix02 的分支已经被合入到master分支上了，但是这两个分支还是存在的。如果我们不需要这两个分支指针了，可以将两个分支指针进行删除：
+
+首先使用 git branch -d bugfix01 对分支 bugfix01 进行删除。
+然后使用 git branch -d bugfix02 对分支 bugfix02 进行删除。
+从下方的操作上来看对分支的删除只是删除的指向该commit号的指针，并不会删除其相关的提交号, 在日志中仍然可以找到之前的commit记录，也仍然可以在该commit上创建新的分支。如果你想删除远端的分支的话，那么得使用 $ git push origin --delete <分支名> 了。
+
+
+
+

@@ -1,0 +1,90 @@
+1.创建索引:
+curl -XPOST "http://127.0.0.1:9200/productindex"
+{"acknowledged":true}
+
+2.查看Mapping 内容
+
+curl -XGET "http://127.0.0.1:9200/productindex/_mapping?pretty"  or curl "http://127.0.0.1:9200/productindex/_mapping?pretty" 
+{ 
+  "productindex" : {
+    "mappings" : { }
+  }
+}
+
+2.创建索引内容:
+curl -XPOST "http://127.0.0.1:9200/productindex/product/_mapping?pretty" -d ' 
+{
+    "product": {
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "store": "yes"
+                },
+                "description": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "price": {
+                    "type": "double"
+                },
+                "onSale": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "createDate": {
+                    "type": "date"
+                }
+            }
+        }
+  }
+'
+
+{
+  "acknowledged" : true
+}
+
+4.新增字段
+curl -XPOST "http://127.0.0.1:9200/productindex/product/_mapping?pretty" -d '{
+     "product": {
+                "properties": {
+                     "amount":{
+                        "type":"integer"
+                   }
+                }
+            }
+    }'
+{
+  "acknowledged" : true
+}
+
+5.批量更新数据
+http://47.111.23.167:9200/yunjicloud_outinorder/_update_by_query
+
+ {
+    "query": {
+        "bool": {
+            "should": {
+                "match_all": {}
+            }
+        }
+    },
+    "script": {
+        "inline": "ctx._source[\"isTms\"] = \"N\"",
+        "lang": "painless"
+    }
+}
+
+
+6.批量删除数据
+http://47.111.23.167:9200/yunjicloudinventory_order/_delete_by_query
+{
+    "query": {
+        "bool": {
+            "should": {
+                "match_all": {}
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+1.重定向{>},追加{>>},管道{|}
+2.管道命令 seq 10 --轮询输出1~10
+head --默认前10行
+tail 尾部后10行 
+cat history 
+cut -d '' -f2 --输出数据根据表达式截取
+awk '{print $2}'  --输出第几列
+| sort | --排序
+uniq -c | --去重
+ sort -nr
+ 
+3.别名 alias 'cls=clear'
+alias :查看系统中所有的命令别名
+设定别名 alias 别名='原命令'
+删除别名 unalias 别名
+使别名永久生效 vi  ~/.bashrc  写入这个文件中即可永久生效   编辑完之后记得使环境变量生效: source .bashrc
+source .bashrc
+
+4.录终端小工具 命令： script -t(时间) -a(每个时间点做了什么)
+script -a action.log -t 2> time.log
+scriptreplay time.lgo action.log
+5.shell中的算术计算
+expr 1 - 1 ;expr 1 + 2 ;expr 1 \* 3 ;expr 3 / 4;
+let a=1;let a=a+1;
+$((1+/-*2));
+bc计算 +-*/%^
+6.shell中产生伪随机数 echo $RANDOM 
+| md5sum --生成的随机数md5处理
+cut -c 1-3 --cut -c 制定截取多少数据
+echo ${#a} 打印a的长度
+
+7.任务终止与前后台执行命令
+ crtl+z(暂停) ctrl+c(终止) fg(暂停的任务 前台执行) bg(暂停的任务 后台执行) jobs(查看任务情况)
+ fg %前面任务号
+ 8.shell中的三种括号() {} []
+ 8.1脚本中的$()和``效果一样
+ 8.2 ()中a=123和(a=abc) echo$a结果是123((可以进行运算))
+8.3 {}中touch test{01..09};范围序列使用;echo {1..9};
+快速备份 cp test.txt{,.bak}
+8.4 []使用 ls test[123] -l ;ls test[1-7] -l
+
+9.shell中的几个内置变量简介
+9.1内置变量都是大写的 
+$RANDOM $PATH $LANG(语言) 
+$BASH_VERSION(bash版本)
+$?
+ommand >out.file 2>&1 &
+
+     command
+
+    >out.file是将command的输出重定向到out.file文件，即输出内容不打印到屏幕上，而是输出到out.file文件中。
+
+    2>&1
+
+    是将标准出错重定向到标准输出，这里的标准输出已经重定向到了out.file文件，即将标准出错也输出到out.file文件中。最后一个&
+
+    ， 是让该命令在后台执行。
